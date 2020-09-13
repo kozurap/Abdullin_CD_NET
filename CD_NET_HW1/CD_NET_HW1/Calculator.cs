@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CD_NET_HW1
 {
-    class Calculator
+    public class Calculator
     {
         int a;
         int b;
