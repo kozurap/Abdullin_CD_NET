@@ -11,11 +11,10 @@ namespace ConsoleApplication1
                 throw new Exception("Invalid input");
             try
             {
-                int a = int.Parse(input[0]);
+                double a = double.Parse(input[0]);
                 string mark = input[1];
-                int b = int.Parse(input[2]);
-                var calc = new Calculator(a, b, mark);
-                int res = calc.Calculate();
+                double b = double.Parse(input[2]);
+                var res = Calculator.Calculate(a,b,mark);
                 Console.WriteLine(res);
             }
             catch

@@ -1,32 +1,25 @@
 ﻿using System;
 namespace ConsoleApplication1
 {
-    public class Calculator
+    static public class Calculator
     {
-        int a;
-        int b;
-        string @operator;
-        public Calculator(int A,int B,string @Operator)
+        static public double Calculate(double A, double B, string Sign)
         {
-            a = A;
-            b = B;
-            @operator = @Operator;
-        }
-        public int Calculate()
-        {
-            switch (@operator)
+            if(B==0 && Sign=="/")
+                throw new Exception("Division by zero");
+            switch (Sign)
             {
                 case "+":
-                    return (a + b);
+                    return (A + B);
 
                 case "-":
-                    return (a - b);
+                    return (A - B);
 
                 case "/":
-                    return (a / b);
+                    return (A / B);
 
                 case "*":
-                    return (a * b);
+                    return (A * B);
 
             }
             throw new Exception("Invalid smth");

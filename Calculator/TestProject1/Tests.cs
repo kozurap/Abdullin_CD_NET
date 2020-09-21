@@ -8,25 +8,53 @@ namespace TestProject1
     public class Tests
     {
         [Test]
-        public void Calculator_Operators_Test()
+        public void Sum_54Plus_2_56Returned()
         {
-            var calc1 = new Calculator(54, 2, "+");
-            var calc2 = new Calculator(54, 2, "-");
-            var calc3 = new Calculator(54, 2, "*");
-            var calc4 = new Calculator(54, 2, "/");
-            var calc5 = new Calculator(54, 2, "haha");
-            Assert.AreEqual(56, calc1.Calculate());
-            Assert.AreEqual(52, calc2.Calculate());
-            Assert.AreEqual(108, calc3.Calculate());
-            Assert.AreEqual(27, calc4.Calculate());
+            Assert.AreEqual(56, Calculator.Calculate(54,2,"+"));
+            }
+        [Test]
+        public void DivisionByZero_ExceptionReturned()
+        {
             try
             {
-                calc5.Calculate();
+                Calculator.Calculate(2, 0, "/");
             }
             catch
             {
                 Assert.Pass();
             }
+        }
+        [Test]
+        public void Sum_51Divide_2_25_Plus_5Divide10_Returned()
+        {
+            Assert.AreEqual(25.5, Calculator.Calculate(51, 2, "/"));
+        }
+        [Test]
+        public void InvalidInput_ExceptionReturned()
+        {
+            try
+            {
+                Calculator.Calculate(54, 2, "haha");
+            }
+            catch
+            {
+                Assert.Pass();
+            }
+        }
+        [Test]
+        public void Sum_54Divide_2_27Returned()
+        {
+            Assert.AreEqual(27, Calculator.Calculate(54, 2, "/"));
+        }
+        [Test]
+        public void Sum_54Multiply_2_108Returned()
+        {
+            Assert.AreEqual(108, Calculator.Calculate(54, 2, "*"));
+        }
+        [Test]
+        public void Sum_54Minus_2_52Returned()
+        {
+            Assert.AreEqual(52, Calculator.Calculate(54,2,"-"));
         }
     }
 }
