@@ -3,23 +3,23 @@ namespace ConsoleApplication1
 {
     static public class Calculator
     {
-        static public double Calculate(double A, double B, string Sign)
+        static public double Calculate(double a, double b, string sign)
         {
-            if(B==0 && Sign=="/")
+            if(b==0 && sign=="/")
                 throw new Exception("Division by zero");
-            switch (Sign)
+            switch (sign)
             {
                 case "+":
-                    return (A + B);
+                    return (a + b);
 
                 case "-":
-                    return (A - B);
+                    return (a - b);
 
                 case "/":
-                    return (A / B);
+                    return (a / b);
 
                 case "*":
-                    return (A * B);
+                    return (a * b);
 
             }
             throw new Exception("Invalid smth");

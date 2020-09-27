@@ -25,7 +25,7 @@ namespace TestProject1
             }
         }
         [Test]
-        public void Sum_51Divide_2_25_Plus_5Divide10_Returned()
+        public void Division_51Divide_2_25_Plus_5Divide10_Returned()
         {
             Assert.AreEqual(25.5, Calculator.Calculate(51, 2, "/"));
         }
@@ -42,17 +42,17 @@ namespace TestProject1
             }
         }
         [Test]
-        public void Sum_54Divide_2_27Returned()
+        public void Division_54Divide_2_27Returned()
         {
             Assert.AreEqual(27, Calculator.Calculate(54, 2, "/"));
         }
         [Test]
-        public void Sum_54Multiply_2_108Returned()
+        public void Multiplication_54Multiply_2_108Returned()
         {
             Assert.AreEqual(108, Calculator.Calculate(54, 2, "*"));
         }
         [Test]
-        public void Sum_54Minus_2_52Returned()
+        public void Substruct_54Minus_2_52Returned()
         {
             Assert.AreEqual(52, Calculator.Calculate(54,2,"-"));
         }
