@@ -10,47 +10,34 @@ type MaybeBuilder() =
     member this.Return(x) =
         Some x
 let maybe = new MaybeBuilder()
-let add x y = maybe{
-    let! a = x
-    let! b = y
-    return a+b
-    }
-let subtract x y =maybe{
-    let! a = x
-    let! b = y
-    return a-b
-}
-let multiply x y =maybe{
-    let! a = x
-    let! b = y
-    return a*b
-}
+let add2 x y = x+y
+let add x y = x+y
+let subtract x y =x-y
+let multiply x y = x*y
 let divide x y =
-    maybe
-        {
-        let! a = x
-        let! b = y
-        let! b2 =
-            match b with
-            |0.0 -> None
-            |c->Some c
-        return a/b2
-        }
+    match y with
+    |0.0 -> None
+    |_ -> Some(x/y)
     
 let calculate op x y=
             match op with
-            | "+" -> add x y              
-            | "-" -> subtract x y
+            | "+" -> Some(add x y)               
+            | "-" -> Some(subtract x y)    
             | "/" -> divide x y
-            | "*" -> multiply x y
+            | "*" -> Some(multiply x y)    
             | _ -> None
             
 [<EntryPoint>]
 let main args=
-    let x= Console.ReadLine()|> tryParseWith Double.TryParse
+    let x = Console.ReadLine()|> tryParseWith Double.TryParse
     let op = Console.ReadLine()
     let y = Console.ReadLine()|>tryParseWith Double.TryParse
-    let result = calculate op x y
+    let result = maybe{
+        let! a = x
+        let! b = y
+        let! calc = calculate op a b
+        return calc
+    }
     match result with
     |None-> printf"Error"
     |Some a -> printf "%f" a
