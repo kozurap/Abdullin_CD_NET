@@ -10,7 +10,6 @@ type MaybeBuilder() =
     member this.Return(x) =
         Some x
 let maybe = new MaybeBuilder()
-let add2 x y = x+y
 let add x y = x+y
 let subtract x y =x-y
 let multiply x y = x*y
