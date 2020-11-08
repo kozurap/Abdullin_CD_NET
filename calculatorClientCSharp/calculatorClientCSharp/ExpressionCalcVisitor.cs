@@ -1,72 +1,72 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace calculatorClientCSharp
 {
-    public class ExpressionCalcVisitor:ExpressionVisitor
+    public  class ExpressionCalcVisitor:ExpressionVisitor
     {
+        private IExpressionSender _sender;
+
+        public ExpressionCalcVisitor(IExpressionSender sender)
+        {
+            _sender = sender;
+        }
+
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            if (node.Type.Name == "MethodConstantExpression")
-                return node;
+            Console.WriteLine("Calculating:"+node.ToString());
             Expression left = node.Left;
             Expression right = node.Right;
-            double x = 0;
-            double y = 0;
-            double.TryParse(left.ToString(), out x);
-            double.TryParse(right.ToString(), out y);
-            Expression c1 = Expression.Constant(x);
-            Expression c2 = Expression.Constant(y);
-            if (left is BinaryExpression && !(right is BinaryExpression))
-            {
-                c1 = this.VisitBinary((BinaryExpression)left);
-            }
-            else if (!(left is BinaryExpression) && right is BinaryExpression)
-            {
-                c2 = this.VisitBinary((BinaryExpression)right);
-            }
-            else if (left is BinaryExpression && right is BinaryExpression)
-            {
-                c1 = this.VisitBinary((BinaryExpression)left);
-                c2 = this.VisitBinary((BinaryExpression)right);
-            }
-
-            Expression Answ;
+            Task<Expression> c1;
+            Task<Expression> c2;
+            c1 = Calculate(left);
+            c2 = Calculate(right);
+            var t = Task.WhenAll(c1, c2);
+            t.Wait();
+            string op;
             switch (node.NodeType)
             {
                 case ExpressionType.Add:
-                    Answ = Expression.Constant(ExpressionSender.GetRespAsync(node.Left.ToString(),
-                        node.Right.ToString(),
-                        "+"));
+                    op = "+";
                     break;
                 case ExpressionType.Subtract:
-                    Answ = Expression.Constant(ExpressionSender.GetRespAsync(node.Left.ToString(),
-                        node.Right.ToString(),
-                        "-"));
+                    op = "-";
                     break;
                 case ExpressionType.Multiply:
-                    Answ = Expression.Constant(ExpressionSender.GetRespAsync(node.Left.ToString(),
-                        node.Right.ToString(),
-                        "*"));
+                    op = "*";
                     break;
                 case ExpressionType.Divide:
-                    Answ = Expression.Constant(ExpressionSender.GetRespAsync(node.Left.ToString(),
-                        node.Right.ToString(),
-                        "/"));
+                    op = "/";
                     break;
                 default: throw new ArgumentException();
             }
 
-            return Answ;
+            var taskAnsw = _sender.GetRespAsync(c1.Result.ToString(), c2.Result.ToString(), op);
+            taskAnsw.Wait();
+            var answer = Expression.Constant(taskAnsw.Result);
+            Console.WriteLine("Result = " + answer.ToString());
+            return answer;
+        }
+        public async Task<Expression> Calculate(Expression exp)
+        {
+            var x = await Task.Run(() => Visit(exp));
+            return x;
         }
 
-        public static async Task<string> Calculate(Expression exp)
+        public override Expression Visit(Expression node)
         {
-            var a = new ExpressionCalcVisitor();
-            var x = a.VisitBinary((BinaryExpression)exp);
-            return x.ToString();
+            if (node is BinaryExpression)
+                return VisitBinary((BinaryExpression)node);
+            return VisitConstant((ConstantExpression) node);
+        }
+        
+        protected override Expression VisitConstant(ConstantExpression node)
+        {
+            return Expression.Constant(double.Parse(node.ToString()));
         }
     }
 }
